@@ -1,0 +1,14 @@
+obj/net.o: net.cpp chainparams.h bignum.h serialize.h allocators.h \
+ version.h clientversion.h uint256.h util.h tinyformat.h db.h sync.h \
+ threadsafety.h net.h mruset.h netbase.h compat.h protocol.h addrman.h \
+ timedata.h hash.h main.h core.h script.h keystore.h key.h txmempool.h \
+ scrypt.h x11hash.h sph_blake.h sph_types.h sph_bmw.h sph_groestl.h \
+ sph_jh.h sph_keccak.h sph_skein.h sph_luffa.h sph_cubehash.h \
+ sph_shavite.h sph_simd.h sph_echo.h ui_interface.h
+net.cpp chainparams.h bignum.h serialize.h allocators.h :
+ version.h clientversion.h uint256.h util.h tinyformat.h db.h sync.h :
+ threadsafety.h net.h mruset.h netbase.h compat.h protocol.h addrman.h :
+ timedata.h hash.h main.h core.h script.h keystore.h key.h txmempool.h :
+ scrypt.h x11hash.h sph_blake.h sph_types.h sph_bmw.h sph_groestl.h :
+ sph_jh.h sph_keccak.h sph_skein.h sph_luffa.h sph_cubehash.h :
+ sph_shavite.h sph_simd.h sph_echo.h ui_interface.h :
