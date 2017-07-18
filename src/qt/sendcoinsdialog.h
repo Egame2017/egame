@@ -39,7 +39,7 @@ public slots:
     void accept();
     SendCoinsEntry *addEntry();
     void updateRemoveEnabled();
-    void setBalance(qint64 balance, qint64 stake, qint64 unconfirmedBalance, qint64 immatureBalance);
+    void setBalance(__int128 balance, __int128 stake, __int128 unconfirmedBalance, __int128 immatureBalance);
 
 private:
     Ui::SendCoinsDialog *ui;

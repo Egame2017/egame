@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2010 Satoshi Nakamoto
+// // Copyright (c) 2009-2010 Satoshi Nakamoto
 // Copyright (c) 2009-2012 The Bitcoin developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
@@ -114,6 +114,7 @@ inline unsigned int GetSerializeSize(signed int a,         int, int=0) { return 
 inline unsigned int GetSerializeSize(unsigned int a,       int, int=0) { return sizeof(a); }
 inline unsigned int GetSerializeSize(signed long a,        int, int=0) { return sizeof(a); }
 inline unsigned int GetSerializeSize(unsigned long a,      int, int=0) { return sizeof(a); }
+inline unsigned int GetSerializeSize(__int128 a,           int, int=0) { return sizeof(a); }
 inline unsigned int GetSerializeSize(signed long long a,   int, int=0) { return sizeof(a); }
 inline unsigned int GetSerializeSize(unsigned long long a, int, int=0) { return sizeof(a); }
 inline unsigned int GetSerializeSize(float a,              int, int=0) { return sizeof(a); }
@@ -129,6 +130,7 @@ template<typename Stream> inline void Serialize(Stream& s, unsigned int a,      
 template<typename Stream> inline void Serialize(Stream& s, signed long a,        int, int=0) { WRITEDATA(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, unsigned long a,      int, int=0) { WRITEDATA(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, signed long long a,   int, int=0) { WRITEDATA(s, a); }
+template<typename Stream> inline void Serialize(Stream& s, __int128 a,           int, int=0) { WRITEDATA(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, unsigned long long a, int, int=0) { WRITEDATA(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, float a,              int, int=0) { WRITEDATA(s, a); }
 template<typename Stream> inline void Serialize(Stream& s, double a,             int, int=0) { WRITEDATA(s, a); }
@@ -143,6 +145,7 @@ template<typename Stream> inline void Unserialize(Stream& s, unsigned int& a,   
 template<typename Stream> inline void Unserialize(Stream& s, signed long& a,        int, int=0) { READDATA(s, a); }
 template<typename Stream> inline void Unserialize(Stream& s, unsigned long& a,      int, int=0) { READDATA(s, a); }
 template<typename Stream> inline void Unserialize(Stream& s, signed long long& a,   int, int=0) { READDATA(s, a); }
+template<typename Stream> inline void Unserialize(Stream& s, __int128& a,   int, int=0) { READDATA(s, a); }
 template<typename Stream> inline void Unserialize(Stream& s, unsigned long long& a, int, int=0) { READDATA(s, a); }
 template<typename Stream> inline void Unserialize(Stream& s, float& a,              int, int=0) { READDATA(s, a); }
 template<typename Stream> inline void Unserialize(Stream& s, double& a,             int, int=0) { READDATA(s, a); }
@@ -1042,7 +1045,7 @@ public:
     CDataStream& read(char* pch, size_t nSize)
     {
         // Read from the beginning of the buffer
-        unsigned int nReadPosNext = nReadPos + nSize;
+        uint64_t nReadPosNext = nReadPos + nSize;
         if (nReadPosNext >= vch.size())
         {
             if (nReadPosNext > vch.size())

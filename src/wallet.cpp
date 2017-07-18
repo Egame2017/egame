@@ -1037,9 +1037,9 @@ void CWallet::ResendWalletTransactions(bool fForce)
 //
 
 
-int64_t CWallet::GetBalance() const
+__int128 CWallet::GetBalance() const
 {
-    int64_t nTotal = 0;
+    __int128 nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it)
@@ -1376,6 +1376,9 @@ bool CWallet::SelectCoinsForStaking(int64_t nTargetValue, unsigned int nSpendTim
         }
         else if (n < nTargetValue + CENT)
         {
+            __int128 tmp = nValueRet;
+            if ((tmp + coin.first) > (std::numeric_limits<int64_t>::max() - COIN))
+                break;
             setCoinsRet.insert(coin.second);
             nValueRet += coin.first;
         }
@@ -1539,7 +1542,7 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, int64_t nValue, CWalletTx&
 uint64_t CWallet::GetStakeWeight() const
 {
     // Choose coins to use
-    int64_t nBalance = GetBalance();
+    __int128 nBalance = GetBalance();
 
     if (nBalance <= nReserveBalance)
         return 0;
@@ -1548,6 +1551,8 @@ uint64_t CWallet::GetStakeWeight() const
 
     set<pair<const CWalletTx*,unsigned int> > setCoins;
     int64_t nValueIn = 0;
+    if (nBalance > (std::numeric_limits<int64_t>::max() - COIN))
+        nBalance = std::numeric_limits<int64_t>::max() - COIN;
 
     if (!SelectCoinsForStaking(nBalance - nReserveBalance, GetTime(), setCoins, nValueIn))
         return 0;
@@ -1584,7 +1589,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     txNew.vout.push_back(CTxOut(0, scriptEmpty));
 
     // Choose coins to use
-    int64_t nBalance = GetBalance();
+    __int128 nBalance = GetBalance();
 
     if (nBalance <= nReserveBalance)
         return false;
@@ -1593,6 +1598,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     set<pair<const CWalletTx*,unsigned int> > setCoins;
     int64_t nValueIn = 0;
+    if (nBalance > (std::numeric_limits<int64_t>::max() - COIN))
+        nBalance = std::numeric_limits<int64_t>::max() - COIN;
 
     // Select coins with suitable depth
     if (!SelectCoinsForStaking(nBalance - nReserveBalance, txNew.nTime, setCoins, nValueIn))
@@ -2203,7 +2210,7 @@ set< set<CTxDestination> > CWallet::GetAddressGroupings()
 
 // ppcoin: check 'spent' consistency between wallet and txindex
 // ppcoin: fix wallet spent state according to txindex
-void CWallet::FixSpentCoins(int& nMismatchFound, int64_t& nBalanceInQuestion, bool fCheckOnly)
+void CWallet::FixSpentCoins(int64_t& nMismatchFound, __int128& nBalanceInQuestion, bool fCheckOnly)
 {
     nMismatchFound = 0;
     nBalanceInQuestion = 0;

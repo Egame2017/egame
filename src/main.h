@@ -867,7 +867,7 @@ public:
     unsigned int nChainTx; // change to 64-bit type when necessary; won't happen before 2030
 
     int64_t nMint;
-    int64_t nMoneySupply;
+    __int128 nMoneySupply;
 
     unsigned int nFlags;  // ppcoin: block index flags
     enum  
